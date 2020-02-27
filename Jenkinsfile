@@ -25,7 +25,7 @@ pipeline {
                       ],
                      credentialsId: 'nexus3_pass',
                      groupId: 'com.wakaleo.gameoflife',
-                     nexusUrl: '172.31.4.229/;8081',
+                     nexusUrl: '172.31.4.229:8081',
                      nexusVersion: 'nexus3',
                      protocol: 'http',
                      repository: 'gameoflife-release',
