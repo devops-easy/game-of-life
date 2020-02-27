@@ -23,7 +23,7 @@ pipeline {
                       [
                     artifactId: 'gameoflife',
                     classifier: '', 
-                    file: 'gameoflife-web/target/gameoflife-${mavenPom.version}.war',
+                    file: "gameoflife-web/target/gameoflife-${mavenPom.version}.war",
                     type: 'war'
                      ]
                      ],
@@ -33,7 +33,7 @@ pipeline {
                     nexusVersion: 'nexus3',
                     protocol: 'http',
                     repository: 'gameoflife-release',
-                    version: '2.0'
+                    version: "${mavenPom.version}"
                 }
             }
         }
