@@ -23,7 +23,7 @@ pipeline {
                         [
                     artifactId: 'gameoflife',
                     classifier: '',
-                    file: "gameoflife-web/target/gameoflife-${mavenPom.version}.war",
+                    file: "gameoflife-web/target/gameoflife.war",
                     type: 'war'
                        ]
                     ],
