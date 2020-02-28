@@ -19,22 +19,21 @@ pipeline {
                 script {
                     def mavenPom = readMavenPom file: 'pom.xml'
                     def nexusRepoName = mavenPom.version.endsWith{"SNAPSHOT"} ? "gameoflife-snapshots" : "gameoflife-release"
-                    nexusArtifactUploader artifacts: 
-                    [
-                      [
+                    nexusArtifactUploader artifacts: [
+                        [
                     artifactId: 'gameoflife',
-                    classifier: '', 
+                    classifier: '',
                     file: "gameoflife-web/target/gameoflife-${mavenPom.version}.war",
                     type: 'war'
-                     ]
-                     ],
+                       ]
+                    ],
                     credentialsId: 'nexus3_pass',
                     groupId: 'com.wakaleo.gameoflife',
-                    nexusUrl: '172.31.11.198:8081',
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    repository: nexusRepoName,
-                    version: "${mavenPom.version}"
+                     nexusUrl: '172.31.11.198:8081',
+                     nexusVersion: 'nexus3',
+                     protocol: 'http',
+                     repository: nexusRepoName,
+                     version: "${mavenPom.version}"
                 }
             }
         }
