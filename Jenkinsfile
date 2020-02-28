@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     def mavenPom = readMavenPom file: 'pom.xml'
-                    def nexusRepoName = mavenPom.version.endsWith{"SNAPSHOT"} ? "gameoflife-snapshots" : "gameoflife-release"
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "gameoflife-snapshots" : "gameoflife-release"
                     nexusArtifactUploader artifacts: [
                         [
                     artifactId: 'gameoflife',
