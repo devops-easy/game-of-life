@@ -18,6 +18,7 @@ pipeline {
             steps {
                 script {
                     def mavenPom = readMavenPom file: 'pom.xml'
+                    def nexusRepoName = mavenPom.version.endsWith{"SNAPSHOT"} ? "gameoflife-snapshots" : "gameoflife-release"
                     nexusArtifactUploader artifacts: 
                     [
                       [
@@ -29,10 +30,10 @@ pipeline {
                      ],
                     credentialsId: 'nexus3_pass',
                     groupId: 'com.wakaleo.gameoflife',
-                    nexusUrl: '172.31.4.229:8081',
+                    nexusUrl: '172.31.11.198:8081',
                     nexusVersion: 'nexus3',
                     protocol: 'http',
-                    repository: 'gameoflife-release',
+                    repository: nexusRepoName,
                     version: "${mavenPom.version}"
                 }
             }
