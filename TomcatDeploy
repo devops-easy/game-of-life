@@ -6,9 +6,10 @@ pipeline {
             git 'https://github.com/devops-easy/game-of-life.git'
             }
         }
-        stage('package the app') {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+               sh script: 'mvn clean package'
+            }
             }
         stage('Deploy to tomcat') {
             steps {
@@ -16,7 +17,7 @@ pipeline {
                 sh """
                 scp -o StrictHostKeyChecking=no  gameoflife-web/target/gameoflife.war ec2-user@172.31.22.64:/opt/tomcat8/webapps/
                 ssh ec2-user@172.31.22.64 tomcatdown
-                ssh ec2-user@172.31.22.64 tomcatdown
+                ssh ec2-user@172.31.22.64 tomcatup
 
                   """
 }
