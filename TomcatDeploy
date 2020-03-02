@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone the code') {
+            steps {
+            git 'https://github.com/devops-easy/game-of-life.git'
+            }
+        }
+        stage('package the app') {
+            steps {
+                sh 'mvn clean package'
+            }
+        stage('Deploy to tomcat') {
+            steps {
+                sshagent(['tomcat_pass']) {
+                sh """
+                scp -o StrictHostKeyChecking=no  gameoflife-web/target/gameoflife.war ec2-user@172.31.22.64:/opt/tomcat8/webapps/
+                ssh ec2-user@172.31.22.64 tomcatdown
+                ssh ec2-user@172.31.22.64 tomcatdown
+
+                  """
+}
+            }
+        }
+        }
+    }
+}
