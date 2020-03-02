@@ -20,9 +20,8 @@ pipeline {
                 ssh ec2-user@172.31.22.64 tomcatup
 
                   """
-}
+                  }
             }
         }
-        }
+     }
     }
-}
