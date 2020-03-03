@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sshagent(['tomcat_pass']) {
                 sh """
-                scp -o StrictHostKeyChecking=no  gameoflife-web/target/gameoflife.war ec2-user@172.31.22.64:/opt/tomcat8/webapps/
+                scp -o StrictHostKeyChecking=no  gameoflife-web/target/gameoflife.war ec2-user@172.31.22.64:/home/ec2-user/tomcat8/webapps/
                 ssh ec2-user@172.31.22.64 tomcatdown
                 ssh ec2-user@172.31.22.64 tomcatup
 
