@@ -11,11 +11,6 @@ pipeline {
                sh script: 'mvn clean package'
             }
         }
-        stage('Package') {
-          steps {
-          sh 'mvn clean package'
-          }
-        }
         stage('SonarQube analysis') {
             steps {
     // performing sonarqube analysis with "withSonarQubeENV(<Name of Server configured in Jenkins>)"
@@ -24,6 +19,31 @@ pipeline {
       sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
        }
       }
+       }
+       stage('Upload war to nexus') {
+            steps {
+                script {
+                    def mavenPom = readMavenPom file: 'pom.xml'
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "gameoflife-snapshot" : "gameoflife-release"
+                    nexusArtifactUploader artifacts: 
+                    [
+                        [
+                    artifactId: 'gameoflife', 
+                    classifier: '', 
+                    file: "gameoflife-web/target/gameoflife.war", 
+                    type: 'war'
+                    ]
+                    ], 
+                    credentialsId: 'SNR_ID', 
+                    groupId: 'com.wakaleo.gameoflife', 
+                    nexusUrl: '172.31.11.237:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: nexusRepoName, 
+                    version: "${mavenPom.version}"
+        
+                }
+            }
        }
   }
 }
