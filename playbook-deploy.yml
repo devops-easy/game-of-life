@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: copy war to ansible server
+      copy: 
+        src: gameoflife-web/target/gameoflife.war
+        dest: /home/ansible/gameoflife.war
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: deploy to tomcat
+      copy:
+        src: /home/ansible/gameoflife.war
+        dest: /home/ansible/tomcat8/webapps/
