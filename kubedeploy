@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    tools {
+       maven 'maven3'
+    }
+    stages {
+        stage('Clone the code') {
+            steps {
+                git 'https://github.com/devops-easy/spring-petclinic.git'
+            }
+        }
+        stage('Build') {
+            steps {
+               sh script: 'mvn clean package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+               sh script: 'sudo docker image build -t devopseasy/spc:1.0 .'
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker_hub_se', passwordVariable: 'devops_easy_pass', usernameVariable: 'devops_easy')]) {
+                   sh 'sudo docker login --username ${devops_easy} --password ${devops_easy_pass}'
+                   }
+                    sh 'sudo docker push devopseasy/spc:1.0'
+            }
+        }
+        stage('Kubernetes Deploy') {
+            steps {
+                kubernetesDeploy (
+                    configs: 'springpetclinic.yml',
+                    kubeconfigId: 'kubeadm_pass',
+                    enableConfigSubstitution: true
+                    
+                )
+            }
+        }
+    
+}
+}
