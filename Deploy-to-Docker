@@ -12,3 +12,4 @@ node{
       def docHome =  tool name: 'docker', type: 'docker'   
       sh "docker image build -t sample:v1 ."
    }
+}
