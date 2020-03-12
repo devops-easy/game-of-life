@@ -8,10 +8,9 @@ node{
       sh "${mvnHome}/bin/mvn package"
    }
    stage('Deploy to Ansible'){
-      
-      sshagent(['ansible-dev']) {
-         sh 'sudo cp gameoflife-web/target/gameoflife.war /home/ansible/gameoflife.war'
-          sh 'sudo cp ansibledeploytomcat.yml ansible@172.31.17.147:/home/ansible/'
+      withCredentials([usernameColonPassword(credentialsId: 'ansible-deploy', variable: 'ansible-pass')]) {
+           sh 'sudo cp gameoflife-web/target/gameoflife.war /home/ansible/gameoflife.war'
+          sh 'sudo cp ansibledeploytomcat.yml /home/ansible/'
          sh 'ssh ec2-user@172.31.17.147 ansible-playbook ansibledeploytomcat.yml'
       }
    }
