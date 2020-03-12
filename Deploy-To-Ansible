@@ -11,7 +11,7 @@ node{
       withCredentials([usernameColonPassword(credentialsId: 'ansible-deploy', variable: 'ansible-pass')]) {
            sh 'sudo cp gameoflife-web/target/gameoflife.war gameoflife.war'
           sh 'sudo cp ansibledeploytomcat.yml ansiblesdeploytomcat.yml'
-         sh 'ssh ec2-user@172.31.17.147 sudo ansible-playbook ansiblesdeploytomcat.yml'
+         sh 'sudo ansible-playbook ansiblesdeploytomcat.yml'
       }
    }
 }
