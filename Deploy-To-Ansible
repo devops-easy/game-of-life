@@ -10,8 +10,8 @@ node{
    stage('Deploy to Ansible'){
       
       sshagent(['ansible-dev']) {
-         sh 'cp gameoflife-web/target/gameoflife.war ansible@172.31.17.147:/home/ansible/gameoflife.war'
-          sh 'scp -o StrictHostKeyChecking=no ansibledeploytomcat.yml ansible@172.31.17.147:/home/ansible/'
+         sh 'sudo cp gameoflife-web/target/gameoflife.war ansible@172.31.17.147:/home/ansible/gameoflife.war'
+          sh 'sudo cp ansibledeploytomcat.yml ansible@172.31.17.147:/home/ansible/'
          sh 'ssh ec2-user@172.31.17.147 ansible-playbook ansibledeploytomcat.yml'
       }
    }
