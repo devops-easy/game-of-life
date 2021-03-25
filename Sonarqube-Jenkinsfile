@@ -1,0 +1,20 @@
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/javahometech/my-app'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'MAVEN_HOME', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
+   
+   stage('SonarQube Analysis') {
+        def mvnHome =  tool name: 'MAVEN_HOME', type: 'maven'
+        withSonarQubeEnv('SONAR') { 
+          sh "${mvnHome}/bin/mvn sonar:sonar"
+        }
+    }
+    stage('Email'){
+      mail bcc: '', body: 'Hi welcome to jenkins', cc: '', from: '', replyTo: '', subject: 'Jenkins Job', to: 'yourmailid@gmail.com'
+   }
+}
