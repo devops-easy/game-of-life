@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+     tools {
+       maven 'MAVEN_HOME'
+           }
+     environment {
+         DOCKER_TAG = getVersion()
+     }
+    stages {
+        stage('SCM'){
+            steps {
+            git 'https://github.com/javahometech/my-app'
+            }
+        }
+        stage('mvn build') {
+            steps {
+                sh "mvn package"
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t devopseasy/sampleapp:${DOCKER_TAG} .'
+            }
+        }
+        stage('DockerHub Push'){
+            steps {
+                withCredentials([string(credentialsId: 'docker_hub', variable: 'dockerHubPwd')]) {
+                   sh 'docker login -u devopseasy -p ${dockerHubPwd}'         
+                  }
+                  sh 'docker push devopseasy/sampleapp:${DOCKER_TAG}'
+            }
+        }
+        
+    }
+    
+}
+def getVersion() {
+        def commitHash = sh returnStdout: true, script: 'git rev-parse --short HEAD'
+        return commitHash
+    }
