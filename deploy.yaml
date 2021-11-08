@@ -1,0 +1,37 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gameoflife-app
+  namespace: default
+  labels:
+    app: gameoflife-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameoflife-app
+  template:
+    metadata:
+      labels:
+        app: gameoflife-app
+    spec:
+      containers:
+      - name: gameoflife-app
+        image: "devopseasy/gameoflife:v1"
+        ports:
+          - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gameoflife-app
+  namespace: default
+spec:
+  selector:
+    app: gameoflife-app
+  type: NodePort
+  ports:
+  - name: http
+    targetPort: 8080
+    port: 80
