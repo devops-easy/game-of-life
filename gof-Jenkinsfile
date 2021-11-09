@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    environment {
+        VERSION = "${env.BUILD_ID}"
+    }
+    stages {
+        stage('Clone the code') {
+            steps {
+                git 'https://github.com/devops-easy/game-of-life.git'
+            }
+        }
+        stage('Build') {
+            steps {
+               sh script: 'mvn clean package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+               sh script: 'sudo docker image build -t devopseasy/gameoflife:v${VERSION} .'
+            }
+        }
+        stage('Docker Push') {
+            steps {
+               script {
+                   withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhub_pass')]) {
+                     sh 'sudo docker login -u devopseasy -p ${dockerhub_pass}'
+                     sh 'sudo docker push devopseasy/gameoflife:v${VERSION}'
+                   }
+               }
+            }
+        }
+        stage('Deploy to k8s') {
+            steps {
+               sshagent(['k8s']) {
+                 sh "scp -o StrictHostKeyChecking=no deploy.yaml ubuntu@34.215.143.119:/home/ubuntu"
+                 script {
+                  sh "ssh ubuntu@34.215.143.119 kubectl apply -f ."
+               }
+        }   
+            }
+        }
+    }
+}
